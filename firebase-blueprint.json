@@ -1,0 +1,99 @@
+{
+  "entities": {
+    "Pond": {
+      "title": "Pond",
+      "description": "Records for fish ponds",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "pondName": { "type": "string" },
+        "seedCount": { "type": "number" },
+        "feedExpense": { "type": "number" },
+        "sales": { "type": "number" },
+        "growthNotes": { "type": "string" },
+        "lastUpdated": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "pondName", "seedCount", "feedExpense", "sales", "lastUpdated"]
+    },
+    "Tree": {
+      "title": "Tree",
+      "description": "Inventory of trees with accounting",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "count": { "type": "number" },
+        "harvestCount": { "type": "number" },
+        "income": { "type": "number" },
+        "expense": { "type": "number" },
+        "lastFertilized": { "type": "string" }
+      },
+      "required": ["id", "type", "count", "income", "expense"]
+    },
+    "Cattle": {
+      "title": "Cattle",
+      "description": "Livestock records",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "tagId": { "type": "string" },
+        "breed": { "type": "string" },
+        "milkYield": { "type": "number" },
+        "expense": { "type": "number" },
+        "healthStatus": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "tagId", "breed", "date"]
+    },
+    "Labor": {
+      "title": "Labor",
+      "description": "Worker attendance and wages",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "wage": { "type": "number" },
+        "laborType": { "type": "string", "enum": ["দৈনিক", "মাসিক"] },
+        "attendance": { "type": "boolean" },
+        "date": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "wage", "laborType", "attendance", "date"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Financial records for monthly tracking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["আয়", "ব্যয়"] },
+        "category": { "type": "string", "enum": ["পুকুর", "গরু", "শ্রমিক", "বাগান", "অন্যান্য"] },
+        "subCategory": { "type": "string" },
+        "amount": { "type": "number" },
+        "date": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "type", "category", "amount", "date"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/ponds/{pondId}": {
+      "schema": "Pond",
+      "description": "User's pond records"
+    },
+    "/users/{userId}/trees/{treeId}": {
+      "schema": "Tree",
+      "description": "User's tree inventory"
+    },
+    "/users/{userId}/cattle/{cattleId}": {
+      "schema": "Cattle",
+      "description": "User's cattle records"
+    },
+    "/users/{userId}/labor/{laborId}": {
+      "schema": "Labor",
+      "description": "User's labor records"
+    },
+    "/users/{userId}/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "User's financial transactions"
+    }
+  }
+}

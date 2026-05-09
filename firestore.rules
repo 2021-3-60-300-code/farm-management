@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidPond(data) {
+      return data.id is string && data.pondName is string && data.seedCount is number && data.feedExpense is number && data.sales is number;
+    }
+    
+    function isValidCattle(data) {
+      return data.id is string && data.tagId is string && data.breed is string;
+    }
+
+    // User data rules
+    match /users/{userId} {
+      allow read, write: if isOwner(userId) && isValidId(userId);
+      
+      match /ponds/{pondId} {
+        allow read, write: if isOwner(userId) && isValidId(pondId);
+      }
+      
+      match /trees/{treeId} {
+        allow read, write: if isOwner(userId) && isValidId(treeId);
+      }
+      
+      match /cattle/{cattleId} {
+        allow read, write: if isOwner(userId) && isValidId(cattleId);
+      }
+      
+      match /labor/{laborId} {
+        allow read, write: if isOwner(userId) && isValidId(laborId);
+      }
+      
+      match /transactions/{transactionId} {
+        allow read, write: if isOwner(userId) && isValidId(transactionId);
+      }
+    }
+  }
+}
